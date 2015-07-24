@@ -293,6 +293,12 @@ vich_uploader:
             upload_destination: user_image_fs
             namer:              vich_uploader.namer_uniqid
             inject_on_load:     false
+        agent_public_file:
+            uri_prefix:         %uri_root/uploads/agents_documents
+            upload_destination: agent_public_doc_fs
+            namer:              vich_uploader.namer_uniqid
+            inject_on_load:     false
+            delete_on_update:   true
 
 # Disabling annotations is needed by FOS Rest Bundle
 sensio_framework_extra:
