@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Doctrine\ORM\EntityManager;
 use PROCERGS\LoginCidadao\CoreBundle\Model\PersonInterface;
+use PROCERGS\LoginCidadao\CoreBundle\Form\Type\AgentPublicType;
 
 class ProfileFormType extends BaseType
 {
@@ -71,6 +72,7 @@ class ProfileFormType extends BaseType
         ));
         $builder->add('defaultCountry', 'hidden',
             array("data" => $country->getId(), "required" => false, "mapped" => false));
+		$builder->add('agentPublic', new AgentPublicType());
     }
 
     public function getName()

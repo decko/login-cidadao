@@ -35,6 +35,11 @@ form.phone: Telefone
 form.phone.example: (51) 99999-9999
 form.mobile: Celular
 form.mobile.example: (51) 99999-9999
+form.fileOfficialDiary: 'Cópia da página do Diário Oficial'
+form.fileOcupation: 'Ofício do Superior Imediato'
+form.registration: 'Matrícula'
+form.dateNomination: 'Data da Nomeação'
+form.dateStartRole: 'Data da Posse'
 resseting.forgot_password: 'Esqueceu sua senha?'
 resetting.request.invalid_username: 'O CPF, nome de usuário ou email "%username%" não está cadastrado.'
 resetting.request.username: 'Email ou CPF:'
@@ -98,6 +103,7 @@ Change: Alterar
 Personal Information: Informações Pessoais
 Contact Information: Informações de Contato
 Social Networks and other connections: Redes Sociais e outras conexões
+Agent Public: Servidor Público
 Account Password: Senha da sua Conta
 Use your Facebook picture: Usar sua foto do Facebook
 Remove your picture: Remover foto do perfil

@@ -336,6 +336,11 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
     protected $notificationTokens;
 
     /**
+     * @ORM\OneToOne(targetEntity="AgentPublic", mappedBy="person")
+     **/
+    private $agentPublic;
+
+    /**
      * @ORM\OneToMany(targetEntity="PROCERGS\LoginCidadao\NotificationBundle\Entity\PersonNotificationOption", mappedBy="person")
      */
     protected $notificationOptions;
@@ -1202,5 +1207,28 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
     public function setPlaceOfBirth(SelectData $location)
     {
         $location->toObject($this);
+    }
+
+    /**
+     * Set agentPublic
+     *
+     * @param \PROCERGS\LoginCidadao\CoreBundle\Entity\AgentPublic $agentPublic
+     * @return AgentPublic
+     */
+    public function setAgentPublic(\PROCERGS\LoginCidadao\CoreBundle\Entity\AgentPublic $agentPublic = null)
+    {
+        $this->agentPublic = $agentPublic;
+
+        return $this;
+    }
+
+    /**
+     * Get person
+     *
+     * @return \PROCERGS\LoginCidadao\CoreBundle\Entity\AgentPublic 
+     */
+    public function getAgentPublic()
+    {
+        return $this->agentPublic;
     }
 }

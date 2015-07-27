@@ -84,6 +84,25 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading">
+                    <h2 class="panel-title">{{ 'Agent Public' | trans }}</h2>
+                </div>
+                <div class="panel-body">
+					<div class="form-group">
+						<label>{{ form_label(form.agentPublic.fileOfficialDiary) }}</label>
+						{{ form_widget(form.agentPublic.fileOfficialDiary.file) }}
+					</div>
+					<div class="form-group">
+						<label>{{ form_label(form.agentPublic.fileOcupation) }}</label>
+						{{ form_widget(form.agentPublic.fileOcupation.file) }}
+					</div>
+                    {{ form_row(form.agentPublic.registration) }}
+                    {{ form_row(form.agentPublic.dateNomination) }}
+                    {{ form_row(form.agentPublic.dateStartRole) }}
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
                     <h2 class="panel-title">{{ 'Social Networks and other connections' | trans }}</h2>
                 </div>
                 <div class="panel-body">
