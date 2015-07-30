@@ -87,17 +87,27 @@
                     <h2 class="panel-title">{{ 'Agent Public' | trans }}</h2>
                 </div>
                 <div class="panel-body">
-					<div class="form-group">
-						<label>{{ form_label(form.agentPublic.fileOfficialDiary) }}</label>
-						{{ form_widget(form.agentPublic.fileOfficialDiary.file) }}
+					<div class="checkbox">
+						<label>
+							{{ form_widget(form.agentPublic.isAgentPublic) }} {{ form_label(form.agentPublic.isAgentPublic) }}
+						</label>
 					</div>
-					<div class="form-group">
-						<label>{{ form_label(form.agentPublic.fileOcupation) }}</label>
-						{{ form_widget(form.agentPublic.fileOcupation.file) }}
+
+					<div class="agentPublicForm" style="display: none;">
+						<div class="form-group">
+							<label>{{ form_label(form.agentPublic.fileOfficialDiary) }}</label>
+							{{ form_widget(form.agentPublic.fileOfficialDiary.file) }}
+							{{ form_errors(form.agentPublic.fileOfficialDiary) }}
+						</div>
+						<div class="form-group">
+							<label>{{ form_label(form.agentPublic.fileOcupation) }}</label>
+							{{ form_widget(form.agentPublic.fileOcupation.file) }}
+							{{ form_errors(form.agentPublic.fileOcupation) }}
+						</div>
+						{{ form_row(form.agentPublic.registration) }}
+						{{ form_row(form.agentPublic.dateNomination) }}
+						{{ form_row(form.agentPublic.dateStartRole) }}
 					</div>
-                    {{ form_row(form.agentPublic.registration) }}
-                    {{ form_row(form.agentPublic.dateNomination) }}
-                    {{ form_row(form.agentPublic.dateStartRole) }}
                 </div>
             </div>
 
@@ -218,6 +228,14 @@
     <script>
 
         $('.birthdate').mask('00/00/0000', {'translation': {0: {pattern: /[0-9*]/}}});
+        $('.dateNomination').mask('00/00/0000', {'translation': {0: {pattern: /[0-9*]/}}});
+        $('.dateStartRole').mask('00/00/0000', {'translation': {0: {pattern: /[0-9*]/}}});
+
+		$(function() {
+			$('.isAgentPublic').click(function() {
+				$( ".agentPublicForm" ).toggle("slow");
+			});
+		});
 
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()

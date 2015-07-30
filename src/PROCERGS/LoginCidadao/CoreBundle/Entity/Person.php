@@ -336,7 +336,7 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
     protected $notificationTokens;
 
     /**
-     * @ORM\OneToOne(targetEntity="AgentPublic", mappedBy="person")
+     * @ORM\OneToOne(targetEntity="AgentPublic", mappedBy="person", cascade={"persist"})
      **/
     private $agentPublic;
 

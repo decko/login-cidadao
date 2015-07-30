@@ -265,6 +265,9 @@ knp_gaufrette:
         user_local_adapter:
             local:
                 directory: %kernel.root_dir%/../web/uploads/profile-pictures
+        agentpublic_local_adapter:
+            local:
+                directory: %kernel.root_dir%/../web/uploads/agents_public
 #        user_ftp_adapter:
 #            ftp:
 #                host: corona.procergs.com.br
@@ -282,6 +285,8 @@ knp_gaufrette:
     filesystems:
         user_image_fs:
             adapter:    user_local_adapter
+        agent_public_file_fs:
+            adapter:    agentpublic_local_adapter
 
 vich_uploader:
     db_driver:  orm
@@ -294,8 +299,8 @@ vich_uploader:
             namer:              vich_uploader.namer_uniqid
             inject_on_load:     false
         agent_public_file:
-            uri_prefix:         %uri_root/uploads/agents_documents
-            upload_destination: agent_public_doc_fs
+            uri_prefix:         %uri_root%/uploads/agents_documents
+            upload_destination: agent_public_file_fs
             namer:              vich_uploader.namer_uniqid
             inject_on_load:     false
             delete_on_update:   true

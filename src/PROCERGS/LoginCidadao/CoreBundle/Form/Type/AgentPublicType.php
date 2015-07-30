@@ -10,6 +10,17 @@ class AgentPublicType extends AbstractType
 {
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
+
+		$builder->add('isAgentPublic', 'checkbox',
+			array(
+				'required' => false,
+				'label' => 'form.isAgentPublic',
+				'translation_domain' => 'FOSUserBundle',
+				'mapped' => false,
+                'attr' => array('class' => 'isAgentPublic')
+			)
+		);
+
 		$builder->add('fileOfficialDiary', 'vich_file',
 			array(
 				'required' => false,
@@ -33,17 +44,21 @@ class AgentPublicType extends AbstractType
 				'translation_domain' => 'FOSUserBundle'
 			)
 		);
-		$builder->add('dateNomination', 'text',
+		$builder->add('dateNomination', 'date',
 			array(
 				'required' => false,
+                'format' => 'dd/MM/yyyy',
+                'widget' => 'single_text',
                 'label' => 'form.dateNomination',
 				'translation_domain' => 'FOSUserBundle',
                 'attr' => array('pattern' => '[0-9/]*', 'class' => 'form-control dateNomination')
 			)
 		);
-		$builder->add('dateStartRole', 'text',
+		$builder->add('dateStartRole', 'date',
 			array(
 				'required' => false,
+                'format' => 'dd/MM/yyyy',
+                'widget' => 'single_text',
                 'label' => 'form.dateStartRole',
 				'translation_domain' => 'FOSUserBundle',
                 'attr' => array('pattern' => '[0-9/]*', 'class' => 'form-control dateStartRole')

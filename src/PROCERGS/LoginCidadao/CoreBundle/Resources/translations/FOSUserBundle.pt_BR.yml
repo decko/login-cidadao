@@ -35,6 +35,7 @@ form.phone: Telefone
 form.phone.example: (51) 99999-9999
 form.mobile: Celular
 form.mobile.example: (51) 99999-9999
+form.isAgentPublic: 'Sou servidor público'
 form.fileOfficialDiary: 'Cópia da página do Diário Oficial'
 form.fileOcupation: 'Ofício do Superior Imediato'
 form.registration: 'Matrícula'
