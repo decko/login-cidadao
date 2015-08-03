@@ -113,6 +113,22 @@ doctrine:
         dbname:   %database_name%
         user:     %database_user%
         password: %database_password%
+
+        # Define environment variables to
+        # assign database connection data
+        #
+        # export SYMFONY__DATABASE__DRIVER="pdo_mysql"
+        # export SYMFONY__DATABASE__HOST="127.0.0.1"
+        # export SYMFONY__DATABASE__PORT=3306
+        # export SYMFONY__DATABASE__NAME="login_cidadao"
+        # export SYMFONY__DATABASE__USER="root"
+        # export SYMFONY__DATABASE__PASSWORD="root"
+        # driver:   "%database.driver%"
+        # host:     "%database.host%"
+        # port:     "%database.port%"
+        # dbname:   "%database.name%"
+        # user:     "%database.user%"
+        # password: "%database.password%"
         charset:  UTF8
         # if using pdo_sqlite as your database driver, add the path in parameters.yml
         # e.g. database_path: %kernel.root_dir%/data/data.db3
