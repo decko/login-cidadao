@@ -11,8 +11,13 @@ class PROCERGSLoginCidadaoCoreBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
-    
+
         $extension = $container->getExtension('security');
         $extension->addSecurityListenerFactory(new LoginCidadaoFactory());
-    }    
+    }
+
+	public function getParent()
+	{
+		return 'FOSUserBundle';
+	}
 }
