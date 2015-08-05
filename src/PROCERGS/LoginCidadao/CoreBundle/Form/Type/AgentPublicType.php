@@ -24,7 +24,8 @@ class AgentPublicType extends AbstractType
 		$builder->add('fileOfficialDiary', 'vich_file',
 			array(
 				'required' => false,
-				'allow_delete' => true,
+				'allow_delete' => true, // not mandatory, default is true
+				'download_link' => true, // not mandatory, default is true
 				'label' => 'form.fileOfficialDiary',
 				'translation_domain' => 'FOSUserBundle'
 			)
@@ -32,7 +33,8 @@ class AgentPublicType extends AbstractType
 		$builder->add('fileOcupation', 'vich_file',
 			array(
 				'required' => false,
-				'allow_delete' => true,
+				'allow_delete' => true, // not mandatory, default is true
+				'download_link' => true, // not mandatory, default is true
 				'label' => 'form.fileOcupation',
 				'translation_domain' => 'FOSUserBundle'
 			)

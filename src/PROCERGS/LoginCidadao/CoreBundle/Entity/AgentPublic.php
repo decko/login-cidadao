@@ -24,7 +24,7 @@ class AgentPublic
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Person", inversedBy="agentPublic")
+     * @ORM\OneToOne(targetEntity="Person", inversedBy="agentPublic", cascade={"persist"})
      * @ORM\JoinColumn(name="person_id", referencedColumnName="id")
      **/
 	private $person;

@@ -24,6 +24,8 @@ class ProfileController extends BaseController
 		$logger->info('Entrando no editAction');
 
         $user = $this->getUser();
+
+
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
         }
@@ -53,7 +55,8 @@ class ProfileController extends BaseController
             return $response;
         }
         return $this->render('FOSUserBundle:Profile:edit.html.twig', array(
-            'form' => $form->createView()
+			'form' => $form->createView(),
+			'user' => $user
         ));
     }
 }

@@ -336,7 +336,7 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
     protected $notificationTokens;
 
     /**
-     * @ORM\OneToOne(targetEntity="AgentPublic", mappedBy="person", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="AgentPublic", mappedBy="person", cascade={"persist", "remove"})
      **/
     private $agentPublic;
 
@@ -1218,14 +1218,13 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
     public function setAgentPublic(\PROCERGS\LoginCidadao\CoreBundle\Entity\AgentPublic $agentPublic = null)
     {
         $this->agentPublic = $agentPublic;
-
-        return $this;
+		$agentPublic->setPerson($this);
     }
 
     /**
      * Get person
      *
-     * @return \PROCERGS\LoginCidadao\CoreBundle\Entity\AgentPublic 
+     * @return \PROCERGS\LoginCidadao\CoreBundle\Entity\AgentPublic
      */
     public function getAgentPublic()
     {

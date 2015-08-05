@@ -89,19 +89,50 @@
                 <div class="panel-body">
 					<div class="checkbox">
 						<label>
+							{% if user.agentPublic %}
+							{{ form_widget(form.agentPublic.isAgentPublic, {'attr': {'checked': 'checked'}}) }} {{ form_label(form.agentPublic.isAgentPublic) }}
+							{% else %}
 							{{ form_widget(form.agentPublic.isAgentPublic) }} {{ form_label(form.agentPublic.isAgentPublic) }}
+							{% endif %}
 						</label>
 					</div>
 
 					<div class="agentPublicForm" style="display: none;">
+						{%  set url = '//' ~ app.request.host %}
+						{%  if app.request.port != 80 %}
+						{%    set url =  url ~ ':' ~ app.request.port %}
+						{%  endif %}
 						<div class="form-group">
 							<label>{{ form_label(form.agentPublic.fileOfficialDiary) }}</label>
+							{% if form.agentPublic.fileOfficialDiary.vars.download_uri is defined %}
+							<a class="btn btn-sm btn-success" href="{{ url }}{{ form.agentPublic.fileOfficialDiary.vars.download_uri }}">{{ 'Download File' | trans }}</a>
+							{% endif %}
+							{% if form.agentPublic.fileOfficialDiary.delete is defined %}
+								{% do form.agentPublic.fileOfficialDiary.delete.setRendered %}
+								<label class="btn btn-sm btn-danger">
+									<input type="checkbox" name="{{ form.agentPublic.fileOfficialDiary.delete.vars.full_name }}" autocomplete="off">
+									{{ 'Delete File' | trans }}
+								</label>
+							{% endif %}
 							{{ form_widget(form.agentPublic.fileOfficialDiary.file) }}
 							{{ form_errors(form.agentPublic.fileOfficialDiary) }}
 						</div>
 						<div class="form-group">
 							<label>{{ form_label(form.agentPublic.fileOcupation) }}</label>
+							{% if form.agentPublic.fileOcupation.vars.download_uri is defined %}
+							<a class="btn btn-sm btn-success" href="{{ form.agentPublic.fileOcupation.vars.download_uri }}">{{ 'Download File' | trans }}</a>
+							{% endif %}
+							{% if form.agentPublic.fileOcupation.delete is defined %}
+								{% do form.agentPublic.fileOcupation.delete.setRendered %}
+								<label class="btn btn-sm btn-danger">
+									<input type="checkbox" name="{{ form.agentPublic.fileOcupation.delete.vars.full_name }}" autocomplete="off">
+									{{ 'Delete File' | trans }}
+								</label>
+							{% endif %}
 							{{ form_widget(form.agentPublic.fileOcupation.file) }}
+							{% if form.agentPublic.fileOcupation.delete is defined %}
+								{% do form.agentPublic.fileOcupation.delete.setRendered %}
+							{% endif %}
 							{{ form_errors(form.agentPublic.fileOcupation) }}
 						</div>
 						{{ form_row(form.agentPublic.registration) }}
@@ -232,6 +263,11 @@
         $('.dateStartRole').mask('00/00/0000', {'translation': {0: {pattern: /[0-9*]/}}});
 
 		$(function() {
+			var agent_checked = $('.isAgentPublic').is(':checked');
+			if (agent_checked) {
+				$( ".agentPublicForm" ).show();
+				$( ".isAgentPublic" ).parent().hide();
+			}
 			$('.isAgentPublic').click(function() {
 				$( ".agentPublicForm" ).toggle("slow");
 			});
