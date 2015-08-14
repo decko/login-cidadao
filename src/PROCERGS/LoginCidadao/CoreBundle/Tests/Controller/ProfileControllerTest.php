@@ -18,18 +18,17 @@ class ProfileControllerTest extends WebTestCase
 
         $this->userManager = $this->repo->get('fos_user.user_manager');
 
-        $email = "testing@test.com";
-        $un = "test";
-        $fn = "testin";
-        $ln = "laster";
-        $pwd = "passworD1";
+        $username = 'usertest';
+        $email = 'test@mail.com';
+        $password = 'userpass';
 
         $this->user = $this->userManager->createUser();
-
         $this->user->setEmail($email);
-        $this->user->setUsername($un);
-        $this->user->setFirstName($fn);
-        $this->user->setPlainPassword($pwd);
+        $this->user->setUsername($username);
+        $this->user->setFirstName('Test');
+        $this->user->setMobile('(61) 9999-9999');
+        $this->user->setPlainPassword($password);
+        $this->user->setEnabled(1);
 
         // Persist the user to the database
         $this->userManager->updateUser($this->user);
@@ -40,14 +39,12 @@ class ProfileControllerTest extends WebTestCase
         $form = $crawler->filter('form[name=login_form_type]')->form();
 
         // set some values
-        $form['login_form_type[username]'] = $un;
-        $form['login_form_type[password]'] = $pwd;
+        $form['login_form_type[username]'] = $username;
+        $form['login_form_type[password]'] = $password;
 
         // submit the form
         $crawler = $this->client->submit($form);
-        print_r($this->client->getResponse());
-
-        $this->client->followRedirects();
+        $this->client->followRedirect();
     }
 
     public function tearDown()
