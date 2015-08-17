@@ -50,7 +50,7 @@
         "procergs/login-cidadao-badges-bundle": "dev-cleanup",
         "procergs/login-cidadao-igp-bundle": "dev-master",
         "scheb/two-factor-bundle": "dev-master",
-        "procergs/tos-bundle": "^1.0"
+        "procergs/tos-bundle": "^1.0",
         "symfony/phpunit-bridge": "^2.7"
     },
     "require-dev": {
