@@ -70,7 +70,7 @@ class DynamicFormController extends Controller
         $formBuilder = $this->createFormBuilder($data,
             array('cascade_validation' => true));
         foreach ($scope as $curr) {
-            $this->addField($formBuilder, $curr, $person);
+            $this->addField($request, $formBuilder, $curr, $person);
         }
         $formBuilder->add('redirect_url', 'hidden')
             ->add('scope', 'hidden');
@@ -82,9 +82,12 @@ class DynamicFormController extends Controller
             $dispatcher->dispatch(DynamicFormEvents::POST_FORM_VALIDATION,
                 $event);
 
-            $event = new \FOS\UserBundle\Event\FormEvent($form->get('person'),
-                $request);
-            $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_SUCCESS, $event);
+            if ($form->has('person')) {
+                $event = new \FOS\UserBundle\Event\FormEvent($form->get('person'),
+                    $request);
+                $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_SUCCESS,
+                    $event);
+            }
 
             $em           = $this->getDoctrine()->getManager();
             $person       = $formBuilder->getData()->getPerson();
@@ -116,9 +119,11 @@ class DynamicFormController extends Controller
 
             $em->flush();
 
-            $dispatcher->dispatch(DynamicFormEvents::POST_FORM_EDIT, $event);
+            if ($form->has('person')) {
+                $dispatcher->dispatch(DynamicFormEvents::POST_FORM_EDIT, $event);
 
-            $dispatcher->dispatch(DynamicFormEvents::PRE_REDIRECT, $event);
+                $dispatcher->dispatch(DynamicFormEvents::PRE_REDIRECT, $event);
+            }
 
             $person = $userManager->findUserByUsername($person->getUsername());
             if (!$waitEmail || $waitEmail && $person->getConfirmationToken() === null) {
@@ -238,7 +243,7 @@ class DynamicFormController extends Controller
                     array('required' => true));
                 break;
             case 'id_cards':
-                $this->addIdCard($formBuilder, $person);
+                $this->addIdCard($request, $formBuilder, $person);
                 break;
             case 'mobile':
                 $this->addPersonField($formBuilder, $person, 'mobile', null,

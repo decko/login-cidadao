@@ -86,7 +86,7 @@ class PersonController extends BaseController
         $user      = $this->getUser();
         $scope     = $this->getClientScope($user);
         $updatedAt = \DateTime::createFromFormat('Y-m-d H:i:s',
-                $this->getRequest()->get('updated_at'));
+                $request->get('updated_at'));
 
         if (!($updatedAt instanceof \DateTime)) {
             $updatedAt = new \DateTime();
