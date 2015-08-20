@@ -1,18 +1,23 @@
-FROM debian:jessie
+FROM php:5.4-apache
 
-MAINTAINER Gilson Filho<me@gilsondev.in>
+RUN apt-get update \
+    && apt-get install -y git libssl-dev zlib1g-dev libicu-dev g++ php5-mysql \
+    && pecl install zip \
+    && echo extension=zip.so > /usr/local/etc/php/conf.d/zip.ini \
+    && pecl install pdo_mysql \
+    && echo extension=pdo_mysql.so > /usr/local/etc/php/conf.d/pdo_mysql.ini \
+    && pecl install apcu-beta \
+    && echo extension=apcu.so > /usr/local/etc/php/conf.d/apcu.ini \
+    && docker-php-ext-install zip mbstring intl pdo_mysql
 
-RUN apt-get update && apt-get install -y git curl php5-cli php5-json php5-intl php5-mysql php5-gd php5-curl
+ADD compose/vhost.conf /etc/apache2/sites-enabled/000-default.conf
+ADD compose/php.ini /usr/local/etc/php/php.ini
 
-RUN curl -sS https://getcomposer.org/installer | php
-RUN mv composer.phar /usr/local/bin/composer
+RUN a2enmod rewrite
 
-ADD entrypoint.sh /entrypoint.sh
+RUN curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/bin/composer
+
 ADD . /var/www/symfony
-
 WORKDIR /var/www/symfony
-# RUN cp -Rvf symfony_environment.sh /etc/profile.d/symfony.sh
-# RUN sh symfony_environment.sh
-RUN composer install
-
-VOLUME /var/www/symfony
+RUN composer install -n

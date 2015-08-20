@@ -1,15 +1,14 @@
 web:
     build: .
-    command: sh entrypoint.sh
     links:
         - db
     environment:
-        - SYMFONY__DATABASE__DRIVER=pdo_mysql
-        - SYMFONY__DATABASE__HOST=db
-        - SYMFONY__DATABASE__PORT=3306
-        - SYMFONY__DATABASE__NAME=login_cidadao
-        - SYMFONY__DATABASE__USER=logincidadao
-        - SYMFONY__DATABASE__PASSWORD=logincidadao
+        SYMFONY__DATABASE__DRIVER: pdo_mysql
+        SYMFONY__DATABASE__HOST: db
+        SYMFONY__DATABASE__PORT: 3306
+        SYMFONY__DATABASE__NAME: login_cidadao
+        SYMFONY__DATABASE__USER: logincidadao
+        SYMFONY__DATABASE__PASSWORD: logincidadao
     volumes:
         - ./:/var/www/symfony
 db:
@@ -21,21 +20,21 @@ db:
         MYSQL_DATABASE: login_cidadao
         MYSQL_USER: logincidadao
         MYSQL_PASSWORD: logincidadao
-php:
-    build: ./compose/php-fpm
-    expose:
-        - 9000:9000
-    volumes_from:
-        - web
-    links:
-        - db
-nginx:
-    build: ./compose/nginx
-    ports:
-        - "80:80"
-    links:
-        - php
-    volumes_from:
-        - web
-    # volumes:
-    #     - logs/nginx/:/var/log/nginx
+# php:
+#     build: ./compose/php-fpm
+#     expose:
+#         - 9000:9000
+#     volumes_from:
+#         - web
+#     links:
+#         - db
+# nginx:
+#     build: ./compose/nginx
+#     ports:
+#         - "80:80"
+#     links:
+#         - php
+#     volumes_from:
+#         - web
+#     volumes:
+#         - logs/nginx/:/var/log/nginx
