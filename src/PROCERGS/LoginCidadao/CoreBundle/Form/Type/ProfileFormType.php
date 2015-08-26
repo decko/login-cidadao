@@ -16,6 +16,10 @@ use PROCERGS\LoginCidadao\CoreBundle\Form\Type\AgentPublicType;
 
 class ProfileFormType extends BaseType
 {
+    # TODO: Definir as cidades que compoem o RIDE
+    private $ESTADOS_HABILITADOS = array('DF' => 53, 'GO' => 52);
+    private $CIDADES_RITE = null;
+
     protected $em;
     private $defaultCountryIso2;
 
@@ -23,7 +27,8 @@ class ProfileFormType extends BaseType
     {
         $country = $this->em->getRepository('PROCERGSLoginCidadaoCoreBundle:Country')->findOneBy(array(
             'iso2' => $this->defaultCountryIso2));
-        $state = $this->em->getRepository('PROCERGSLoginCidadaoCoreBundle:State')->findOneById(53);
+        $state = $this->em->getRepository(
+            'PROCERGSLoginCidadaoCoreBundle:State')->findOneById($this->ESTADOS_HABILITADOS["DF"]);
         $cities = $state->getCities();
         $builder
             ->add('email', 'email',
@@ -50,15 +55,6 @@ class ProfileFormType extends BaseType
                 'allow_delete' => true, // not mandatory, default is true
                 'download_link' => true, // not mandatory, default is true
             ))
-
-
-            # ->add('placeOfBirth', 'lc_location',
-            #     array(
-            #     'level' => 'city',
-            #     'city_label' => 'Place of birth - City',
-            #     'state_label' => 'Place of birth - State',
-            #     'country_label' => 'Place of birth - Country',
-            # ))
         ;
         $builder->add('nationality', 'entity',
             array(
