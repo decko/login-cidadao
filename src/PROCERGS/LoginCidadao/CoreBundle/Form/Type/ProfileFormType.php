@@ -23,6 +23,8 @@ class ProfileFormType extends BaseType
     {
         $country = $this->em->getRepository('PROCERGSLoginCidadaoCoreBundle:Country')->findOneBy(array(
             'iso2' => $this->defaultCountryIso2));
+        $state = $this->em->getRepository('PROCERGSLoginCidadaoCoreBundle:State')->findOneById(53);
+        $cities = $state->getCities();
         $builder
             ->add('email', 'email',
                 array('label' => 'form.email', 'translation_domain' => 'FOSUserBundle'))
@@ -48,19 +50,22 @@ class ProfileFormType extends BaseType
                 'allow_delete' => true, // not mandatory, default is true
                 'download_link' => true, // not mandatory, default is true
             ))
-            ->add('placeOfBirth', 'lc_location',
-                array(
-                'level' => 'city',
-                'city_label' => 'Place of birth - City',
-                'state_label' => 'Place of birth - State',
-                'country_label' => 'Place of birth - Country',
-            ))
+
+
+            # ->add('placeOfBirth', 'lc_location',
+            #     array(
+            #     'level' => 'city',
+            #     'city_label' => 'Place of birth - City',
+            #     'state_label' => 'Place of birth - State',
+            #     'country_label' => 'Place of birth - Country',
+            # ))
         ;
         $builder->add('nationality', 'entity',
             array(
             'required' => false,
             'class' => 'PROCERGSLoginCidadaoCoreBundle:Country',
             'choice_label' => 'name',
+            'data' => $country,
             'preferred_choices' => array($country),
             'choice_translation_domain' => true,
             'query_builder' => function(EntityRepository $er) {
@@ -71,9 +76,37 @@ class ProfileFormType extends BaseType
         },
             'label' => 'Nationality'
         ));
+
+        $builder->add('state', 'entity',
+            array(
+            'class' => 'PROCERGSLoginCidadaoCoreBundle:State',
+            'choice_label' => 'name',
+            'preferred_choices' => array($state),
+            'empty_value' => '',
+            'data' => $state,
+            'choice_translation_domain' => true,
+            'attr' => array(
+                'class' => 'form-control location-select state-select'
+            ),
+            'label' => 'Place of birth - State'
+        ));
+        $builder->add('city', 'entity',
+            array(
+            'class' => 'PROCERGSLoginCidadaoCoreBundle:City',
+            'choice_label' => 'name',
+            'choices' => $cities,
+            'empty_value' => '',
+            'choice_translation_domain' => true,
+            'attr' => array(
+                'class' => 'form-control location-select state-select'
+            ),
+            'label' => 'Place of birth - City'
+        ));
+
         $builder->add('defaultCountry', 'hidden',
             array("data" => $country->getId(), "required" => false, "mapped" => false));
-		$builder->add('agentPublic', new AgentPublicType());
+
+        $builder->add('agentPublic', new AgentPublicType());
     }
 
     public function getName()
