@@ -15,23 +15,35 @@ layout.login: Login
 form.group_name: 'Nome do Grupo:'
 form.username: 'Escolha seu nome de usuário:'
 form.email: Email
+form.email.example: seu@email.com
 form.current_password: 'Senha atual:'
 form.plainPassword: Senha
+form.plainPassword.example: Crie uma senha
 form.password: 'Criar uma senha:'
 form.password_confirmation: 'Confirme sua senha:'
 form.new_password: 'Nova senha:'
 form.new_password_confirmation: 'Repita a senha:'
 form.firstName: Nome
+form.firstName.example: Fulano
 form.surname: Sobrenome
+form.surname.example: de Tal
 form.birthdate: 'Data de nascimento'
 form.cep: CEP
 form.cpf: CPF
 form.city: Cidade
 form.phone: Telefone
+form.phone.example: (51) 99999-9999
 form.mobile: Celular
+form.mobile.example: (51) 99999-9999
+form.isAgentPublic: 'Sou servidor público'
+form.fileOfficialDiary: 'Cópia da página do Diário Oficial'
+form.fileOcupation: 'Ofício do Superior Imediato'
+form.registration: 'Matrícula'
+form.dateNomination: 'Data da Nomeação'
+form.dateStartRole: 'Data da Posse'
 resseting.forgot_password: 'Esqueceu sua senha?'
 resetting.request.invalid_username: 'O CPF, nome de usuário ou email "%username%" não está cadastrado.'
-resetting.request.username: 'CPF, nome de usuário ou email:'
+resetting.request.username: 'Email ou CPF:'
 resetting.request.submit: 'Recuperar senha'
 resetting.check_email: 'Foi enviado um email para %email%. Para recuperar a sua senha, clique no link da mensagem.'
 resetting.email.subject: 'Redefinir senha'
@@ -79,14 +91,9 @@ registration.email.click: 'Confirmar Email'
 Yes: Sim
 'Connect to the Nota Fiscal Gaúcha': 'Conectar à Nota Fiscal Gaúcha'
 'Continue Registration': 'Continuar Cadastro'
-form.voterRegistration: 'Título de Eleitor'
-'Don''t know your Voter Registration number?': 'Não sabe seu Título de Eleitor?'
 facebook.token.error: 'Aparentemente houve um erro a autenticação com o Facebook. Por favor, tente logar novamente!'
 facebook.nousername: 'Conectado ao Facebook'
 twitter.nousername: 'Conectado ao Twitter'
-'Use your account on Nota Fiscal Gaúcha and validate your Voter Registration': 'Use sua conta na Nota Fiscal Gaúcha e valide seu Título de Eleitor'
-'Use your account on Nota Fiscal Gaúcha and authorize us to validate your Voter Registration': 'Use sua conta na Nota Fiscal Gaúcha e autorize a validação de Título de Eleitor'
-'The Voter Registration used is not valid according to Nota Fiscal Gaúcha. Please type your Voter Registration correctly': 'O Título informado não é valido pela Nota Fiscal Gaúcha. Por favor, informe corretamente seu Título de Eleitor'
 security.login.remember_me: 'Manter conectado'
 'Log in now %link_start%or create your account here!%link_end%': 'Acesse agora %link_start%ou crie sua conta aqui!%link_end%'
 'Connect with Google': 'Conectar usando Google'
@@ -97,4 +104,13 @@ Change: Alterar
 Personal Information: Informações Pessoais
 Contact Information: Informações de Contato
 Social Networks and other connections: Redes Sociais e outras conexões
+Agent Public: Servidor Público
 Account Password: Senha da sua Conta
+Use your Facebook picture: Usar sua foto do Facebook
+Remove your picture: Remover foto do perfil
+Your profile picure will be changed to <strong></strong>: Sua foto de perfil será trocada para <strong></strong>
+Your Facebook profile picure will be used.: Sua foto de perfil do Facebook será usada.
+form.register.call_to_action: Quero me cadastrar
+form.login.call_to_action: Já tenho cadastro
+'Download File': 'Baixar Arquivo'
+'Delete File': 'Remover Arquivo'

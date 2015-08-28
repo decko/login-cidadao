@@ -16,39 +16,12 @@ class AddressController extends FOSRestController
 {
 
     /**
-     * @REST\Get("/public/postalcode/{postalCode}", name="lc_consultaCep2", defaults={"postalCode" = ""})
-     * @REST\View()
-     * @Audit\Loggable(type="SELECT")
-     */
-    public function viewPostalCodeAction($postalCode)
-    {
-        $request = $this->getRequest();
-        $busca = $this->get('procergs_logincidadao.dne');
-        $postalCodes = $busca->findByCep($postalCode);
-        if ($postalCodes) {
-            $result = array(
-                'code' => 200,
-                'msg' => null,
-                'items' => array(
-                    $postalCodes
-                )
-            );
-        } else {
-            throw new NotFoundHttpException();
-        }
-
-        $view = $this->view($result);
-        return $this->handleView($view);
-    }
-
-    /**
      * @REST\Get("/public/country", name="lc_search_country" )
      * @REST\View()
      * @Audit\Loggable(type="SELECT")
      */
-    public function searchCountryAction()
+    public function searchCountryAction(Request $request)
     {
-        $request = $this->getRequest();
         $query = $this->getDoctrine()->getRepository('PROCERGSLoginCidadaoCoreBundle:Country')
         ->createQueryBuilder('cty')
         ->where('cty.reviewed = ' . Country::REVIEWED_OK)
@@ -61,9 +34,8 @@ class AddressController extends FOSRestController
      * @REST\View()
      * @Audit\Loggable(type="SELECT")
      */
-    public function searchStateAction(Request $request = null)
+    public function searchStateAction(Request $request)
     {
-        $request = $this->getRequest();
         $query = $this->getDoctrine()->getRepository('PROCERGSLoginCidadaoCoreBundle:State')
         ->createQueryBuilder('state')
         ->where('state.reviewed = ' . Country::REVIEWED_OK);
@@ -82,9 +54,8 @@ class AddressController extends FOSRestController
      * @REST\View()
      * @Audit\Loggable(type="SELECT")
      */
-    public function searchCityAction(Request $request = null)
+    public function searchCityAction(Request $request)
     {
-        $request = $this->getRequest();
         $query = $this->getDoctrine()->getRepository('PROCERGSLoginCidadaoCoreBundle:City')
         ->createQueryBuilder('c')
         ->where('c.reviewed = ' . Country::REVIEWED_OK);
