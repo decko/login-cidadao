@@ -19,3 +19,4 @@
 /.buildpath
 /app/check.php
 /.vagrant
+/composer.lock

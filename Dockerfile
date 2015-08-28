@@ -20,4 +20,3 @@ RUN curl -sS https://getcomposer.org/installer | php \
 
 ADD . /var/www/symfony
 WORKDIR /var/www/symfony
-RUN composer install -n
