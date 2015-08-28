@@ -90,7 +90,7 @@
                 <div class="panel-body">
 					<div class="checkbox">
 						<label>
-							{% if user.agentPublic %}
+							{% if user.agentPublic.registration is not null %}
 							{{ form_widget(form.agentPublic.isAgentPublic, {'attr': {'checked': 'checked'}}) }} {{ form_label(form.agentPublic.isAgentPublic) }}
 							{% else %}
 							{{ form_widget(form.agentPublic.isAgentPublic) }} {{ form_label(form.agentPublic.isAgentPublic) }}
