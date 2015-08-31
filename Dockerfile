@@ -1,7 +1,7 @@
 FROM php:5.4-apache
 
 RUN apt-get update \
-    && apt-get install -y git libssl-dev zlib1g-dev libicu-dev g++ php5-mysql \
+    && apt-get install -y git libssl-dev zlib1g-dev libicu-dev g++ php5-mysql nodejs nodejs-legacy npm \
     && pecl install zip \
     && echo extension=zip.so > /usr/local/etc/php/conf.d/zip.ini \
     && pecl install pdo_mysql \
@@ -17,6 +17,8 @@ RUN a2enmod rewrite
 
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/bin/composer
+
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 ADD . /var/www/symfony
 WORKDIR /var/www/symfony
