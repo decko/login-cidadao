@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define permissions to write for www-data user
-RUN chown -R www-data:www-data /var/www/symfony/app/cache
-RUN chown -R www-data:www-data /var/www/symfony/app/logs
+chown -R www-data:www-data /var/www/symfony/app/cache
+chown -R www-data:www-data /var/www/symfony/app/logs
 
 php app/console cache:clear -e prod --no-warmup
 php app/console assets:install
