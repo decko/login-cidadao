@@ -9,6 +9,8 @@ web:
         SYMFONY__DATABASE__NAME: login_cidadao
         SYMFONY__DATABASE__USER: logincidadao
         SYMFONY__DATABASE__PASSWORD: logincidadao
+    ports:
+        - "80:80"
     volumes:
         - ./:/var/www/symfony
 db:
@@ -20,21 +22,3 @@ db:
         MYSQL_DATABASE: login_cidadao
         MYSQL_USER: logincidadao
         MYSQL_PASSWORD: logincidadao
-# php:
-#     build: ./compose/php-fpm
-#     expose:
-#         - 9000:9000
-#     volumes_from:
-#         - web
-#     links:
-#         - db
-# nginx:
-#     build: ./compose/nginx
-#     ports:
-#         - "80:80"
-#     links:
-#         - php
-#     volumes_from:
-#         - web
-#     volumes:
-#         - logs/nginx/:/var/log/nginx
