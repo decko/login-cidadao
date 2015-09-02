@@ -21,4 +21,9 @@ RUN curl -sS https://getcomposer.org/installer | php \
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 ADD . /var/www/symfony
+
+RUN usermod -u 1000 www-data
+RUN chown -R www-data:www-data /var/www/symfony/app/cache
+RUN chown -R www-data:www-data /var/www/symfony/app/logs
+
 WORKDIR /var/www/symfony
