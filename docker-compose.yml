@@ -22,3 +22,16 @@ db:
         POSTGRES_PASSWORD: logincidadao
     volumes:
         - /data/login_cidadao:/data
+
+# To use MySQL or MariaDB
+# db:
+#     image: mysql
+#     ports:
+#         - "3306:3306"
+#     environment:
+#         MYSQL_ROOT_PASSWORD: root
+#         MYSQL_DATABASE: login_cidadao
+#         MYSQL_USER: logincidadao
+#         MYSQL_PASSWORD: logincidadao
+#     volumes:
+#         - /data/login_cidadao:/var/lib/mysql
