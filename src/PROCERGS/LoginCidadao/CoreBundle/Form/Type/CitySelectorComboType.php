@@ -85,14 +85,19 @@ class CitySelectorComboType extends AbstractType
                 if ($form->has('state')) {
                     $form->remove('state');
                 }
-                $form->add('state_text', (empty($choices) ? 'text' : 'hidden'),
-                    array(
-                    'label' => $options['state_label'],
-                    //'mapped' => false,
-                    'attr' => array(
-                        'class' => 'form-control location-select state-select location-text'
-                    )
-                ));
+
+                // XXX: Removing to disable input in validation errors,
+                // because not use the combo selector city.
+                // $form->add('state_text', (empty($choices) ? 'text' : 'hidden'),
+                //     array(
+                //     'label' => $options['state_label'],
+                //     //'mapped' => false,
+                //     'attr' => array(
+                //         'class' => 'form-control location-select state-select location-text'
+                //     )
+                // ));
+
+
                 return;
             } else {
                 if ($form->has('state_text')) {
@@ -125,14 +130,18 @@ class CitySelectorComboType extends AbstractType
                 if ($form->has('city')) {
                     $form->remove('city');
                 }
-                $form->add('city_text', 'text',
-                    array(
-                    'label' => $options['city_label'],
-                    //'mapped' => false,
-                    'attr' => array(
-                        'class' => 'form-control location-select city-select location-text'
-                    ))
-                );
+
+                // XXX: Removing to disable input in validation errors,
+                // because not use the combo selector city.
+                // $form->add('city_text', 'text',
+                //     array(
+                //     'label' => $options['city_label'],
+                //     //'mapped' => false,
+                //     'attr' => array(
+                //         'class' => 'form-control location-select city-select location-text'
+                //     ))
+                // );
+
                 return;
             } else {
                 if ($form->has('city_text')) {
