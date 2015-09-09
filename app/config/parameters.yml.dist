@@ -1,7 +1,7 @@
 parameters:
-    database_driver:   pdo_mysql
+    database_driver:   pdo_pgsql
     database_host:     db
-    database_port:     3306
+    database_port:     5432
     database_name:     login_cidadao
     database_user:     logincidadao
     database_password: logincidadao

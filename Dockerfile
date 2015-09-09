@@ -1,14 +1,14 @@
 FROM php:5.4-apache
 
 RUN apt-get update \
-    && apt-get install -y git libssl-dev zlib1g-dev libicu-dev g++ php5-mysql nodejs nodejs-legacy npm \
+    && apt-get install -y git libssl-dev zlib1g-dev libicu-dev g++ php5-pgsql libpq-dev nodejs nodejs-legacy npm \
     && pecl install zip \
     && echo extension=zip.so > /usr/local/etc/php/conf.d/zip.ini \
-    && pecl install pdo_mysql \
-    && echo extension=pdo_mysql.so > /usr/local/etc/php/conf.d/pdo_mysql.ini \
+    && pecl install pdo_pgsql \
+    && echo extension=pdo_pgsql.so > /usr/local/etc/php/conf.d/pdo_pgsql.ini \
     && pecl install apcu-beta \
     && echo extension=apcu.so > /usr/local/etc/php/conf.d/apcu.ini \
-    && docker-php-ext-install zip mbstring intl pdo_mysql
+    && docker-php-ext-install zip mbstring intl pdo_pgsql
 
 ADD compose/vhost.conf /etc/apache2/sites-enabled/000-default.conf
 ADD compose/php.ini /usr/local/etc/php/php.ini

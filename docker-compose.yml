@@ -14,13 +14,11 @@ web:
     volumes:
         - ./:/var/www/symfony
 db:
-    image: mysql
+    build: compose/pgsql
     ports:
-        - "3306:3306"
+        - "5432:5432"
     environment:
-        MYSQL_ROOT_PASSWORD: root
-        MYSQL_DATABASE: login_cidadao
-        MYSQL_USER: logincidadao
-        MYSQL_PASSWORD: logincidadao
+        POSTGRES_USER: logincidadao
+        POSTGRES_PASSWORD: logincidadao
     volumes:
-        - /data/login_cidadao:/var/lib/mysql
+        - /data/login_cidadao:/var/lib/postgresql
