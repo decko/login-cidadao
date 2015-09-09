@@ -22,3 +22,5 @@ db:
         MYSQL_DATABASE: login_cidadao
         MYSQL_USER: logincidadao
         MYSQL_PASSWORD: logincidadao
+    volumes:
+        - /data/login_cidadao:/var/lib/mysql
