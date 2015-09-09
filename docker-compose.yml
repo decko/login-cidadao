@@ -21,4 +21,4 @@ db:
         POSTGRES_USER: logincidadao
         POSTGRES_PASSWORD: logincidadao
     volumes:
-        - /data/login_cidadao:/var/lib/postgresql
+        - /data/login_cidadao:/data
