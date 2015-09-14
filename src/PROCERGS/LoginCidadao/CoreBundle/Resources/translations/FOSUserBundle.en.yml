@@ -52,7 +52,7 @@ change_password.submit: 'Change Password'
 form.plainPassword: Password
 form.plainPassword.example: Create a password
 form.phone: Phone
-form.phone.example: +55 51 1234-5678
+form.phone.example: +55 61 1234-5678
 (optional): (optional)
 'Reset Password': 'Reset Password'
 'Enter your username or email': 'Enter your username or email'
