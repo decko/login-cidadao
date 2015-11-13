@@ -61,7 +61,6 @@ class ProfileFormType extends BaseType
             'required' => false,
             'class' => 'PROCERGSLoginCidadaoCoreBundle:Country',
             'choice_label' => 'name',
-            'data' => $country,
             'preferred_choices' => array($country),
             'choice_translation_domain' => true,
             'query_builder' => function(EntityRepository $er) {

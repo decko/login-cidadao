@@ -54,25 +54,28 @@ class CitySelectorComboType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $preferredChoiceCallback = $this->getPreferredChoiceCallback();
         $builder->add('country', 'entity',
             array(
             'empty_value' => '',
             'class' => $this->countryManager->getClass(),
             'choice_label' => 'name',
+            'property' => 'name',
             'choices' => $this->countryManager->findAll(),
             'attr' => array(
                 'class' => 'form-control location-select country-select'
             ),
             'translation_domain' => 'messages',
             'choice_translation_domain' => true,
-            'label' => $options['country_label']
+            'label' => $options['country_label'],
+            'preferred_choices' => $preferredChoiceCallback
         ));
 
         $stateManager = $this->stateManager;
         $cityManager  = $this->cityManager;
         $level        = $options['level'];
 
-        $refreshState = function (FormInterface $form, $countryId = null) use ($options, $stateManager, $level) {
+        $refreshState = function (FormInterface $form, $countryId = null) use ($options, $stateManager, $level, $preferredChoiceCallback) {
             if ($level === 'country') {
                 return;
             }
@@ -108,12 +111,14 @@ class CitySelectorComboType extends AbstractType
                 array(
                 'class' => $stateManager->getClass(),
                 'choice_label' => 'name',
+                'property' => 'name',
                 'empty_value' => '',
                 'choices' => $choices,
                 'attr' => array(
                     'class' => 'form-control location-select state-select'
                 ),
-                'label' => $options['state_label']
+                'label' => $options['state_label'],
+                'preferred_choices' => $preferredChoiceCallback
             ));
         };
 
@@ -153,6 +158,7 @@ class CitySelectorComboType extends AbstractType
                 'class' => $cityManager->getClass(),
                 'empty_value' => '',
                 'choice_label' => 'name',
+                'property' => 'name',
                 'choices' => $stateId === null ? array() : $cityManager->findByStateId($stateId),
                 'attr' => array(
                     'class' => 'form-control location-select city-select'
@@ -242,5 +248,12 @@ class CitySelectorComboType extends AbstractType
         if (array_key_exists('city', $view->children) && $view->children['city']->vars['choice_translation_domain']) {
             usort($view->children['city']->vars['choices'], $sortFunction);
         }
+    }
+
+    private function getPreferredChoiceCallback()
+    {
+        return function ($choice, $key) {
+            return $choice->getPreference() > 0;
+        };
     }
 }
