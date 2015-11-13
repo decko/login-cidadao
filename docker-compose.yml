@@ -3,9 +3,9 @@ web:
     links:
         - db
     environment:
-        SYMFONY__DATABASE__DRIVER: pdo_mysql
+        SYMFONY__DATABASE__DRIVER: pdo_pgsql
         SYMFONY__DATABASE__HOST: db
-        SYMFONY__DATABASE__PORT: 3306
+        SYMFONY__DATABASE__PORT: 5432
         SYMFONY__DATABASE__NAME: login_cidadao
         SYMFONY__DATABASE__USER: logincidadao
         SYMFONY__DATABASE__PASSWORD: logincidadao
@@ -14,7 +14,8 @@ web:
     volumes:
         - ./:/var/www/symfony
 db:
-    build: compose/pgsql
+    image: postgres:9.4
+        #build: compose/pgsql
     ports:
         - "5432:5432"
     environment:
