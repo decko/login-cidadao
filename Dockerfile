@@ -25,6 +25,6 @@ ADD . /var/www/symfony
 RUN usermod -u 1000 www-data
 RUN chown -R www-data:www-data /var/www/symfony/app/cache
 RUN chown -R www-data:www-data /var/www/symfony/app/logs
-RUN chown -R www-data:www-data /var/www/symgony/web/uploads
+RUN chown -R www-data:www-data /var/www/symfony/web/uploads
 
 WORKDIR /var/www/symfony
