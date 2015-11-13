@@ -4,6 +4,7 @@ namespace PROCERGS\LoginCidadao\CoreBundle\Entity;
 
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use PROCERGS\OAuthBundle\Entity\Client;
@@ -18,6 +19,9 @@ use PROCERGS\OAuthBundle\Model\ClientInterface;
 use Doctrine\Common\Collections\Collection;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
+use PROCERGS\LoginCidadao\CoreBundle\Model\LocationAwareInterface;
+use PROCERGS\LoginCidadao\CoreBundle\Model\SelectData;
+use PROCERGS\Generic\LongPolling\LongPollingUtils;
 
 /**
  * @ORM\Entity(repositoryClass="PROCERGS\LoginCidadao\CoreBundle\Entity\PersonRepository")
@@ -28,9 +32,9 @@ use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
  * @JMS\ExclusionPolicy("all")
  * @Vich\Uploadable
  */
-class Person extends BaseUser implements PersonInterface, TwoFactorInterface, BackupCodeInterface
+class Person extends BaseUser implements PersonInterface, TwoFactorInterface, BackupCodeInterface,
+    LocationAwareInterface
 {
-
     /**
      * @JMS\Expose
      * @JMS\Groups({"public_profile"})
@@ -251,12 +255,6 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
     protected $state;
 
     /**
-     * @ORM\Column(name="nfg_access_token", type="string", length=255, nullable=true, unique=true)
-     * @JMS\Since("1.0.2")
-     */
-    protected $nfgAccessToken;
-
-    /**
      * @JMS\Expose
      * @JMS\Groups({"country"})
      * @ORM\ManyToOne(targetEntity="PROCERGS\LoginCidadao\CoreBundle\Entity\Country")
@@ -264,24 +262,6 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
      * @JMS\Since("1.0.2")
      */
     protected $country;
-
-    /**
-     * @JMS\Expose
-     * @JMS\Groups({"nfgprofile"})
-     * @ORM\ManyToOne(targetEntity="PROCERGS\LoginCidadao\CoreBundle\Entity\NfgProfile")
-     * @ORM\JoinColumn(name="nfg_profile_id", referencedColumnName="id")
-     * @JMS\Since("1.0.2")
-     */
-    protected $nfgProfile;
-
-    /**
-     * @JMS\Expose
-     * @JMS\Groups({"voter_registration"})
-     * @ORM\Column(name="voter_registration", type="string", length=12, nullable=true, unique=true)
-     * @PROCERGSAssert\VoterRegistration
-     * @JMS\Since("1.0.2")
-     */
-    protected $voterRegistration;
 
     /**
      * @Assert\File(
@@ -358,6 +338,11 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
     protected $notificationTokens;
 
     /**
+     * @ORM\OneToOne(targetEntity="AgentPublic", mappedBy="person", cascade={"persist", "remove"})
+     **/
+    private $agentPublic;
+
+    /**
      * @ORM\OneToMany(targetEntity="PROCERGS\LoginCidadao\NotificationBundle\Entity\PersonNotificationOption", mappedBy="person")
      */
     protected $notificationOptions;
@@ -385,7 +370,7 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
      * @ORM\Column(name="google_authenticator_secret", type="string", nullable=true)
      */
     private $googleAuthenticatorSecret;
-    
+
     /**
      * @JMS\Expose
      * @JMS\Groups({"nationality"})
@@ -404,14 +389,14 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
     public function __construct()
     {
         parent::__construct();
-        $this->authorizations = new ArrayCollection();
-        $this->notificationTokens = new ArrayCollection();
+        $this->authorizations      = new ArrayCollection();
+        $this->notificationTokens  = new ArrayCollection();
         $this->notificationOptions = new ArrayCollection();
-        $this->notifications = new ArrayCollection();
-        $this->clients = new ArrayCollection();
-        $this->logoutKeys = new ArrayCollection();
-        $this->addresses = new ArrayCollection();
-        $this->backupCodes = new ArrayCollection();
+        $this->notifications       = new ArrayCollection();
+        $this->clients             = new ArrayCollection();
+        $this->logoutKeys          = new ArrayCollection();
+        $this->addresses           = new ArrayCollection();
+        $this->backupCodes         = new ArrayCollection();
     }
 
     public function getEmail()
@@ -467,7 +452,7 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
 
     public function setMobile($mobile)
     {
-        $mobile = preg_replace('/[^0-9]/', '', $mobile);
+        $mobile       = preg_replace('/[^0-9]/', '', $mobile);
         $this->mobile = $mobile;
     }
 
@@ -486,6 +471,9 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
         return $this;
     }
 
+    /**
+     * @return Authorization[]
+     */
     public function getAuthorizations()
     {
         return $this->authorizations;
@@ -507,6 +495,22 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
             }
         }
         return false;
+    }
+
+    /**
+     * @param Client $client
+     * @return array
+     */
+    public function getClientScope(Client $client)
+    {
+        $authorizations = $this->getAuthorizations();
+        foreach ($authorizations as $auth) {
+            $c = $auth->getClient();
+            if ($c->getId() == $client->getId()) {
+                return $auth->getScope();
+            }
+        }
+        return null;
     }
 
     /**
@@ -601,7 +605,19 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
      */
     public function getFullName()
     {
-        return $this->getFirstname() . ' ' . $this->getSurname();
+        $fullName = array();
+        if ($this->getFirstname() !== null) {
+            $fullName[] = $this->getFirstname();
+        }
+        if ($this->getSurname() !== null) {
+            $fullName[] = $this->getSurname();
+        }
+
+        if (count($fullName) > 0) {
+            return implode(' ', $fullName);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -612,15 +628,8 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
      */
     public function getDataValid()
     {
-        $terms['cpf'] = (is_numeric($this->cpf) && strlen($this->nfgAccessToken));
+        $terms['cpf']   = is_numeric($this->cpf);
         $terms['email'] = is_null($this->getConfirmationToken());
-        if ($this->getNfgProfile()) {
-            $terms['nfg_access_lvl'] = $this->getNfgProfile()->getAccessLvl();
-            $terms['voter_registration'] = $this->getNfgProfile()->getVoterRegistrationSit() > 0 ? true : false;
-        } else {
-            $terms['nfg_access_lvl'] = 0;
-            $terms['voter_registration'] = false;
-        }
         return $terms;
     }
 
@@ -763,7 +772,7 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
 
     public function checkEmailPending()
     {
-        $confirmToken = $this->getConfirmationToken();
+        $confirmToken  = $this->getConfirmationToken();
         $notifications = $this->getNotifications();
 
         if (is_null($confirmToken)) {
@@ -830,7 +839,8 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
 
     public function isCpfExpired()
     {
-        return ($this->getCpfExpiration() instanceof \DateTime && $this->getCpfExpiration() <= new \DateTime());
+        return ($this->getCpfExpiration() instanceof \DateTime && $this->getCpfExpiration()
+            <= new \DateTime());
     }
 
     public function hasPassword()
@@ -839,62 +849,15 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
         return strlen($password) > 0;
     }
 
-    public function setState($var)
+    public function setState(State $state = null)
     {
-        $this->state = $var;
+        $this->state = $state;
         return $this;
     }
 
     public function getState()
     {
         return $this->state;
-    }
-
-    public function setNfgAccessToken($var)
-    {
-        $this->nfgAccessToken = $var;
-        return $this;
-    }
-
-    public function getNfgAccessToken()
-    {
-        return $this->nfgAccessToken;
-    }
-
-    /**
-     *
-     * @param \PROCERGS\LoginCidadao\CoreBundle\Entity\NfgProfile $var
-     * @return City
-     */
-    public function setNfgProfile(\PROCERGS\LoginCidadao\CoreBundle\Entity\NfgProfile $var = null)
-    {
-        $this->nfgProfile = $var;
-
-        return $this;
-    }
-
-    /**
-     *
-     * @return \PROCERGS\LoginCidadao\CoreBundle\Entity\NfgProfile
-     */
-    public function getNfgProfile()
-    {
-        return $this->nfgProfile;
-    }
-
-    public function setVoterRegistration($var = null)
-    {
-        if (null === $var) {
-            $this->voterRegistration = null;
-        } else {
-            $this->voterRegistration = preg_replace('/[^0-9]/', '', $var);
-        }
-        return $this;
-    }
-
-    public function getVoterRegistration()
-    {
-        return $this->voterRegistration;
     }
 
     /**
@@ -1008,7 +971,7 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
         // User's profile picture
         if ($this->hasLocalProfilePicture()) {
             $picturePath = $imageHelper->asset($this, 'image');
-            $pictureUrl = $request->getUriForPath($picturePath);
+            $pictureUrl  = $request->getUriForPath($picturePath);
             if ($isDev) {
                 $pictureUrl = str_replace('/app_dev.php', '', $pictureUrl);
             }
@@ -1018,7 +981,7 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
         if (is_null($pictureUrl)) {
             // TODO: fix this and make it comply to DRY
             $picturePath = $templateHelper->getUrl('bundles/procergslogincidadaocore/images/userav.png');
-            $pictureUrl = $request->getUriForPath($picturePath);
+            $pictureUrl  = $request->getUriForPath($picturePath);
             if ($isDev) {
                 $pictureUrl = str_replace('/app_dev.php', '', $pictureUrl);
             }
@@ -1040,12 +1003,12 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
     /**
      * @ORM\PreUpdate
      */
-    public function setUpdatedAt($var = NULL)
+    public function setUpdatedAt($updatedAt = null)
     {
-        if ($var === null) {
-            $this->updatedAt = new \DateTime();
+        if ($updatedAt instanceof \DateTime) {
+            $this->updatedAt = $updatedAt;
         } else {
-            $this->updatedAt = $var;
+            $this->updatedAt = new \DateTime('now');
         }
         return $this;
     }
@@ -1091,9 +1054,9 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
         return $this->googleAccessToken;
     }
 
-    public function setCountry($var)
+    public function setCountry(Country $country = null)
     {
-        $this->country = $var;
+        $this->country = $country;
         return $this;
     }
 
@@ -1142,6 +1105,9 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
         return $this->logoutKeys;
     }
 
+    /**
+     * @return ArrayCollection
+     */
     public function getAddresses()
     {
         return $this->addresses;
@@ -1233,17 +1199,83 @@ class Person extends BaseUser implements PersonInterface, TwoFactorInterface, Ba
         }
         return false;
     }
-    
+
     public function setNationality($var)
     {
         $this->nationality = $var;
         return $this;
     }
-    
+
     public function getNationality()
     {
         return $this->nationality;
     }
-    
 
+    public function getPlaceOfBirth()
+    {
+        $location = new SelectData();
+        $location->getFromObject($this);
+        return $location;
+    }
+
+    public function setPlaceOfBirth(SelectData $location)
+    {
+        $location->toObject($this);
+    }
+
+    /**
+     * Set agentPublic
+     *
+     * @param \PROCERGS\LoginCidadao\CoreBundle\Entity\AgentPublic $agentPublic
+     * @return AgentPublic
+     */
+    public function setAgentPublic(\PROCERGS\LoginCidadao\CoreBundle\Entity\AgentPublic $agentPublic = null)
+    {
+        $this->agentPublic = $agentPublic;
+		$agentPublic->setPerson($this);
+    }
+
+    /**
+     * Get person
+     *
+     * @return \PROCERGS\LoginCidadao\CoreBundle\Entity\AgentPublic
+     */
+    public function getAgentPublic()
+    {
+        return $this->agentPublic;
+    }
+
+    public function waitUpdate(EntityManager $em, \DateTime $updatedAt)
+    {
+        $id            = $this->getId();
+        $lastUpdatedAt = null;
+        $callback      = $this->getCheckUpdateCallback($em, $id, $updatedAt,
+            $lastUpdatedAt);
+        return LongPollingUtils::runTimeLimited($callback);
+    }
+
+    private function getCheckUpdateCallback(EntityManager $em, $id, $updatedAt,
+                                            $lastUpdatedAt)
+    {
+        $people = $em->getRepository('PROCERGSLoginCidadaoCoreBundle:Person');
+        return function() use ($id, $people, $em, $updatedAt, $lastUpdatedAt) {
+            $em->clear();
+            $person = $people->find($id);
+            if (!$person->getUpdatedAt()) {
+                return false;
+            }
+
+            if ($person->getUpdatedAt() > $updatedAt) {
+                return $person;
+            }
+
+            if ($lastUpdatedAt === null) {
+                $lastUpdatedAt = $person->getUpdatedAt();
+            } elseif ($person->getUpdatedAt() != $lastUpdatedAt) {
+                return $person;
+            }
+
+            return false;
+        };
+    }
 }
